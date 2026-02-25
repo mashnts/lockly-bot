@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del \"C:\\\\Users\\\\Acer\\\\OneDrive\\\\Desktop\\\\projects\\\\portfolio_projects\\\\Lockly\\\\.env\")",
+      "Bash(del \"C:\\\\Users\\\\Acer\\\\OneDrive\\\\Desktop\\\\projects\\\\portfolio_projects\\\\Lockly\\\\backend\\\\alembic\\\\alembic.ini\")",
+      "Bash(dir:*)"
+    ]
+  }
+}
