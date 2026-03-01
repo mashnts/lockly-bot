@@ -41,11 +41,11 @@ async def cryptobot_webhook(data: CryptoBotWebhook, db: AsyncSession = Depends(g
         transaction.subscriber_telegram_id,
         "✅ Поздравляю, Подписка активирована!"
         )
-        # link = await bot.create_chat_invite_link(
-        # chat_id=channel.telegram_chat_id,
-        # member_limit=1
-        # )
-        # await bot.send_message(transaction.subscriber_telegram_id, f"Ссылка для вступления: {link.invite_link}")
+        link = await bot.create_chat_invite_link(
+        chat_id=channel.telegram_chat_id,
+        member_limit=1
+        )
+        await bot.send_message(transaction.subscriber_telegram_id, f"Ссылка для вступления: {link.invite_link}")
         print("Сообщение отправлено успешно!")
     except Exception as e:
         print("ОШИБКА при отправке:", e)
