@@ -42,13 +42,15 @@ async def get_period(message: Message, state: FSMContext):
     data = await state.get_data()
     await state.clear()
 
-    channel = await create_channel({
-        "author_telegram_id": message.from_user.id,
-        "telegram_chat_id": data["chat_id"],
-        "title": data["title"],
-        "description": data["description"],
-        "price": data["price"],
-        "period_days": int(message.text)
-    })
-
-    await message.answer(f"Канал добавлен! ID: {channel['id']}")
+    try:
+        channel = await create_channel({
+            "author_telegram_id": message.from_user.id,
+            "telegram_chat_id": data["chat_id"],
+            "title": data["title"],
+            "description": data["description"],
+            "price": data["price"],
+            "period_days": int(message.text)
+        })
+        await message.answer(f"Канал добавлен! ID: {channel['id']}")
+    except Exception as e:
+        await message.answer(f"Ошибка при добавлении канала: {e}")
