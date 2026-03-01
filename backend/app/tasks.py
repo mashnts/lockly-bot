@@ -1,12 +1,12 @@
 from datetime import datetime
 from sqlalchemy import select
-from app.database import async_session_maker
+from app.database import AsyncSessionLocal
 from app.models import Subscriber, Channel 
 from app.config import settings
 from aiogram import Bot
 
 async def check_expired_subscriptions():
-    async with async_session_maker() as db:
+    async with AsyncSessionLocal() as db:
         result = await db.execute(select(Subscriber).where(Subscriber.expires_at < datetime.now(), Subscriber.is_active == True))
         expired = result.scalars.all()
 
