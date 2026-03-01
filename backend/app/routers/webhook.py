@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from app.database import get_db
 from app.models import Transaction, Subscriber, Channel
 from app.schemas import CryptoBotWebhook
+from app.config import settings
+from aiogram import Bot
 
 router = APIRouter(prefix="/webhook")
 
@@ -27,10 +29,33 @@ async def cryptobot_webhook(data: CryptoBotWebhook, db: AsyncSession = Depends(g
     channel = result2.scalar_one_or_none()
 
     subscriber = Subscriber(
-    channel_id=transaction.channel_id,
-    telegram_id=transaction.subscriber_telegram_id,
-    expires_at=datetime.now() + timedelta(days=channel.period_days)
+        channel_id=transaction.channel_id,
+        telegram_id=transaction.subscriber_telegram_id,
+        expires_at=datetime.now() + timedelta(days=channel.period_days)
     )
+
+    bot = Bot(token=settings.BOT_TOKEN)
+
+    try:
+        await bot.send_message(
+        transaction.subscriber_telegram_id,
+        "✅ Поздравляю, Подписка активирована!"
+        )
+        # link = await bot.create_chat_invite_link(
+        # chat_id=channel.telegram_chat_id,
+        # member_limit=1
+        # )
+        # await bot.send_message(transaction.subscriber_telegram_id, f"Ссылка для вступления: {link.invite_link}")
+        print("Сообщение отправлено успешно!")
+    except Exception as e:
+        print("ОШИБКА при отправке:", e)
+    finally:
+        await bot.session.close()
+    
+    
+    
+
     db.add(subscriber)
     await db.commit()
     return {"ok": True}
+

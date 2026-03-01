@@ -37,7 +37,7 @@ async def subscribe(message: Message):
             "channel_id": channel_id, 
             "subscriber_telegram_id": telegram_id,
             "amount": channel['price'],
-            "cryptobot_invoice_id": invoice.bot_invoice_url
+            "cryptobot_invoice_id":  str(invoice.invoice_id)
         })
 
     await message.answer(f"Информация о канале:\nНазвание: {channel['title']}, \nЦена: {channel['price']}", reply_markup=pay)

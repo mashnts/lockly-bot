@@ -4,3 +4,5 @@ class AddChannel(StatesGroup):
     waiting_chat_id = State()
     waiting_price = State()
     waiting_period = State()
+    waiting_title = State()
+    waiting_description = State()

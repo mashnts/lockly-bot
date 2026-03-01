@@ -1,4 +1,4 @@
-import httpx
+import httpx, aiohttp
 from bot.config import settings
 
 async def create_author(telegram_id: int, username: str | None):
@@ -31,3 +31,8 @@ async def create_transaction(data: dict):
     async with httpx.AsyncClient() as client:
         resp = await client.post(f"{settings.BACKEND_URL}/transactions/", json=data)
         return resp.json()
+    
+async def get_my_subscriptions(telegram_id: int):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f"{settings.BACKEND_URL}/subscribers/{telegram_id}") as resp:
+            return await resp.json()
