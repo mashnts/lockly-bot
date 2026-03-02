@@ -11,4 +11,4 @@ async def start(message: Message):
         telegram_id=message.from_user.id,
         username=message.from_user.username
     )
-    await message.answer("Привет! Я Lockly 🔐\n\nКоманды:\n/addchannel — добавить канал\n/dashboard — мой кабинет")
+    await message.answer("Привет! Я Lockly 🔐\n\nКоманды:\n/addchannel - добавить канал\n/dashboard - мой кабинет\n/subscribe [id канала] - подписаться на канал")
