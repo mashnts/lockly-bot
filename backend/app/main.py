@@ -3,6 +3,9 @@ from app.routers import authors, channels, webhook, transactions, subscribers
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from app.tasks import check_expired_subscriptions
 from aiogram.types import BotCommand
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="Lockly")
 

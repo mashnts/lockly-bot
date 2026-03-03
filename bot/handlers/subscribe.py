@@ -2,9 +2,10 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from bot.services import get_channel, create_transaction
+from bot.services import get_channel, create_transaction, check_subscription
 from bot.cryptopay import create_invoice 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton 
+
 
 router = Router()
 
@@ -27,6 +28,13 @@ async def subscribe(message: Message):
     
     telegram_id = message.from_user.id
     payload = f"{channel_id},{telegram_id}"
+
+    sub = await check_subscription(channel_id, telegram_id)
+
+    if sub:
+        await message.answer(f"У вас активна подписка на канал {channel['title']} до {sub['expires_at']}")
+        return
+    
     invoice = await create_invoice("USDT", channel['price'], f"Подписка на {channel['title']}", payload, 3600)
     print(invoice.__dict__)
 

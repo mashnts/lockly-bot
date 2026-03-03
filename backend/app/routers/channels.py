@@ -43,3 +43,4 @@ async def get_channel(channel_id: int, db: AsyncSession = Depends(get_db)):
     if not channel:
         raise HTTPException(status_code=404, detail="Channel not found")
     return channel
+

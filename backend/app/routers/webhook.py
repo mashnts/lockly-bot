@@ -3,12 +3,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from datetime import datetime, timedelta
 from app.database import get_db
-from app.models import Transaction, Subscriber, Channel
+from app.models import Transaction, Subscriber, Channel, Author
 from app.schemas import CryptoBotWebhook
 from app.config import settings
 from aiogram import Bot
 import hmac
 import hashlib  
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/webhook")
 
@@ -49,6 +52,12 @@ async def cryptobot_webhook(request: Request, data: CryptoBotWebhook, db: AsyncS
         expires_at=datetime.now() + timedelta(days=channel.period_days)
     )
 
+    result3 = await db.execute(select(Author).where(Author.id == channel.author_id))
+    author = result3.scalar_one_or_none()
+
+    if author:
+        author.balance += transaction.amount
+
     bot = Bot(token=settings.BOT_TOKEN)
 
     try:
@@ -61,16 +70,14 @@ async def cryptobot_webhook(request: Request, data: CryptoBotWebhook, db: AsyncS
         member_limit=1
         )
         await bot.send_message(transaction.subscriber_telegram_id, f"Ссылка для вступления: {link.invite_link}")
-        print("Сообщение отправлено успешно!")
+        logger.info("Сообщение отправлено успешно!")
     except Exception as e:
-        print("ОШИБКА при отправке:", e)
+        logger.error(f"ОШИБКА при отправке:, {e}")
     finally:
         await bot.session.close()
     
-    
-    
-
     db.add(subscriber)
+    db.add(author)
     await db.commit()
     return {"ok": True}
 
