@@ -4,11 +4,12 @@ from sqlalchemy import select
 from app.database import get_db
 from app.models import Transaction
 from app.schemas import TransactionCreate, TransactionResponse
+from app.deps import verify_internal_token
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 
 @router.post("/", response_model=TransactionResponse)
-async def create_transaction(data: TransactionCreate, db: AsyncSession = Depends(get_db)):
+async def create_transaction(data: TransactionCreate, db: AsyncSession = Depends(get_db), _=Depends(verify_internal_token)):
 
     transaction = Transaction(
         channel_id = data.channel_id,

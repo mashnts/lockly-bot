@@ -29,10 +29,10 @@ async def subscribe(message: Message):
     telegram_id = message.from_user.id
     payload = f"{channel_id},{telegram_id}"
 
-    sub = await check_subscription(channel_id, telegram_id)
+    sub = await check_subscription(telegram_id, channel_id)
 
-    if sub:
-        await message.answer(f"У вас активна подписка на канал {channel['title']} до {sub['expires_at']}")
+    if sub and 'id' in sub:
+        await message.answer(f"У вас активна подписка на канал '{channel['title']}' до {sub['expires_at'][:10]}")
         return
     
     invoice = await create_invoice("USDT", channel['price'], f"Подписка на {channel['title']}", payload, 3600)

@@ -4,11 +4,12 @@ from sqlalchemy import select
 from app.database import get_db
 from app.models import Author
 from app.schemas import AuthorCreate, AuthorResponse
+from app.deps import verify_internal_token
 
 router = APIRouter(prefix="/authors", tags=["authors"])
 
 @router.post("/", response_model=AuthorResponse)
-async def create_author(data: AuthorCreate, db: AsyncSession = Depends(get_db)):
+async def create_author(data: AuthorCreate, db: AsyncSession = Depends(get_db), _=Depends(verify_internal_token)):
     result = await db.execute(select(Author).where(Author.telegram_id == data.telegram_id))
     author = result.scalar_one_or_none()
 

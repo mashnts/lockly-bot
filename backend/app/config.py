@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     BOT_TOKEN: str
     CRYPTOBOT_TOKEN: str
     SECRET_KEY: str
+    INTERNAL_API_TOKEN: str
 
     class Config:
         env_file = ".env"
